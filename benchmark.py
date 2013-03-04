@@ -1,7 +1,7 @@
 import sys, cProfile, re
 from xml.parsers import expat
 from lxml import etree
-from tools import profilers
+import tools
 
 def expat_parse(f):
    
@@ -43,7 +43,12 @@ if __name__ == "__main__":
     # file_name = sys.argv[1]
 
     file_name = "test_xml/mega.xml"
-    regy = profilers.RegexProfile(file_name,'results')
+    regy = tools.profilers.RegexProfile()
+
+    profile_manager = tools.ProfileManager([regy], file_name)
+    
+    profile_manager.search_tag_by_attribute('item', 'id', 'item21749')
+
     # for x in xrange(30):
     #     regy.profile_search_tag_by_attribute_value('item', 'id', 'item21749',x)
 
