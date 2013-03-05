@@ -1,5 +1,6 @@
 import profilers
 import os
+import pstats
 
 class ProfileManager(object):
     def __init__(self, profiler_list, xml_file_name, results_dir = 'results'):
@@ -9,18 +10,53 @@ class ProfileManager(object):
         self.xml_data = xml_file.read()
         xml_file.close()
 
-    def search_tag_by_attribute(self, tag, attribute, attribute_value, sample_size = 5, results_dir = 'search_tag_by_attribute'):
-        test_results = {}
+    def __get_complete_report(self, completed_results):
+        stats = pstats.Stats(completed_results[0][profilers.STAT_FILE_NAME])
+        for completed_result in completed_results[1:]: 
+            stats.add(completed_result[profilers.STAT_FILE_NAME])
+        return stats
+
+    def __stamp_test_results(self, results_dict, expected_results):
+        found_results = results_dict[profilers.FOUND_RESULTS]
+        results_dict[profilers.PASS] = found_results == expected_results 
+        print 'Test %s of %s has %s' % (results_dict[profilers.TEST_NUM],
+                                        results_dict[profilers.NAME],
+                                        'passed!' if results_dict[profilers.PASS] else 'failed...')
+        return results_dict
+
+    def search_tag_by_attribute(self, tag, attribute, attribute_value, 
+                                sample_size = 25, results_dir = 'search_tag_by_attribute'):
+        results_by_profile = {}
+        stats_by_profile = {}
+        expected_results = {'tag':tag, 'attribute_value':attribute_value}
+
 
         testing_dir = '%s/%s' % (self.results_dir, results_dir)
+
         for profiler in self.profiler_list:
+            print '----- Running Profiler on %s -----' % (profiler.results_dir)
 
             results_path = profiler.get_results_dir(testing_dir)
             if not os.path.exists(results_path): 
                 os.makedirs(results_path)
 
-            test_results[profiler] = [profiler.search_tag_by_attribute(self.xml_data, tag, attribute, attribute_value, testing_dir, x) for x in xrange(sample_size)]
+
+            results_by_profile[profiler] = [self.__stamp_test_results(
+                                            profiler.search_tag_by_attribute(self.xml_data, 
+                                                                             tag,
+                                                                             attribute, 
+                                                                             attribute_value, 
+                                                                             testing_dir, 
+                                                                             x),
+                                            expected_results) for x in xrange(sample_size)]
+
+            stats_by_profile[profiler] = self.__get_complete_report(results_by_profile[profiler])
+
+            stats_by_profile[profiler].dump_stats('%s/%s.stat' % (testing_dir, 
+                                                                  profiler.results_dir ))
 
 
+        return stats_by_profile
 
+# [ results[profilers.STAT_FILE_NAME] for results in results_by_profile[profiler]]
 
