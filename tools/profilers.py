@@ -9,7 +9,15 @@ PASS = 'PASS'
 NAME = 'NAME'
 
 class ResultsItem(object):
-    pass
+    def __init__(self, number, data, file_name):
+        self.number = number
+        self.passed = False
+        self.data = data
+        self.file_name = file_name
+
+    def test_results(expected_results):
+        result_item.passed = result_item.data == expected_results 
+        
 
 class XMLProfilerItem(object):
     def __init__(self, results_dir):
@@ -28,11 +36,13 @@ class XMLProfilerItem(object):
         stat_file_name = '%s/profile_%d.stat' % (self.get_results_dir(local_dict['parent_dir']), 
                                                  local_dict['test_number'])
         profiler.dump_stats(stat_file_name)
-
-        return {FOUND_RESULTS: results,
-                STAT_FILE_NAME: stat_file_name, 
-                TEST_NUM:local_dict['test_number'], 
-                NAME:self.results_dir}
+        return ResultsItem(local_dict['test_number'],
+                           results,
+                           stat_file_name)
+        # return {FOUND_RESULTS: results,
+        #         STAT_FILE_NAME: stat_file_name, 
+        #         TEST_NUM:local_dict['test_number'], 
+        #         NAME:self.results_dir}
 
 import re
 class RegexProfile(XMLProfilerItem):
