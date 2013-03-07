@@ -1,7 +1,16 @@
 
 import sys, profilers, pstats
 
+
 class ProfileManager(object):
+    """ Profile Manager
+    Handles and runs mulitiple profiles 
+    to generates reports.
+
+    Attributes:
+        profiler_list: list of profiler objects compare each run
+        xml_data: A string representation of our xml file
+    """
     def __init__(self, profiler_list, xml_file_name):
         self.profiler_list = profiler_list
         xml_file = open(xml_file_name)
@@ -9,6 +18,16 @@ class ProfileManager(object):
         xml_file.close()
 
     def print_stats(self, stats, results, sample_size):
+        """ Prints stats
+        This allows for a controlled output format.
+        Also this should only be only called under the context
+        of several profiles under the same conditions.
+
+        Args: 
+            stats: list of Pstat objects 
+            results: list of result items
+            sample_size: number of samples ran
+        """
         num_passed = sum(res.passed for res in results)
         print '////////////////////////////////////////////////////////'
         print '/////    Average number of calls per sample, %s' % (stats.total_calls/(sample_size))
@@ -19,12 +38,32 @@ class ProfileManager(object):
         stats.print_stats()
 
     def print_current_status(self, to_write):
+        """ Print current status
+        Is our standard format for printing and 
+        updating a line on the prompt.
+
+        Args:
+            to_write: a new stirng to replace our current
+                line with
+        """
         print to_write,
         sys.stdout.flush()
         print "\r",
 
     def search_tag_by_attribute(self, tag, attribute, attribute_value, 
                                 sample_size = 25):
+        """ Search tag by attribute
+        This runs all of our profiles stored in profiler list
+        and aggergates all of our stats from each run.
+        This specificly runs the search tag by attribute on each profiler.
+
+        Args:
+            tag: the name of the tag we need to find
+            attribute: the attribute are we inspecting
+            attribute_value: the value of our attrubte we 
+                are trying to find
+            sample_size: the number of samples we would like to collect
+        """
         results_by_profile = {}
         stats_by_profile = {}
         expected_result = {'tag':tag, 'attribute_value':attribute_value}
