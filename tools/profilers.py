@@ -8,49 +8,43 @@ TEST_NUM = 'TEST_NUM'
 PASS = 'PASS'
 NAME = 'NAME'
 
-class ResultsItem(object):
-    def __init__(self, number, data, file_name):
+class ResultItem(object):
+    def __init__(self, number, data, profile_result):
         self.number = number
-        self.passed = False
         self.data = data
-        self.file_name = file_name
+        self.profile_result = profile_result
+        self.passed = False
 
-    def test_results(expected_results):
-        result_item.passed = result_item.data == expected_results 
+    def test(self, expected_results):
+        self.passed = self.data == expected_results 
+        return self.passed
         
 
 class XMLProfilerItem(object):
-    def __init__(self, results_dir):
-        self.results_dir = results_dir
+    def __init__(self, name):
+        self.name = name
 
     def search_tag_by_attribute(self, file_data, tag, attribute, attribute_value, 
-                                parent_dir, test_number = 0):
+                                test_number = 0):
         raise NotImplementedError
-
-    def get_results_dir(self, parent_dir = None):
-        return '%s' % ('/'.join([parent_dir,self.results_dir]))
 
     def run_profile(self, to_profile, local_dict):
         profiler = cProfile.Profile()
         results = profiler.runcall(to_profile, local_dict)
-        stat_file_name = '%s/profile_%d.stat' % (self.get_results_dir(local_dict['parent_dir']), 
-                                                 local_dict['test_number'])
-        profiler.dump_stats(stat_file_name)
-        return ResultsItem(local_dict['test_number'],
+        # stat_file_name = '%s/profile_%d.stat' % (self.get_results_dir(local_dict['parent_dir']), 
+        #                                          local_dict['test_number'])
+        # profiler.dump_stats(stat_file_name)
+        return ResultItem(local_dict['test_number'],
                            results,
-                           stat_file_name)
-        # return {FOUND_RESULTS: results,
-        #         STAT_FILE_NAME: stat_file_name, 
-        #         TEST_NUM:local_dict['test_number'], 
-        #         NAME:self.results_dir}
+                           profiler)
 
 import re
 class RegexProfile(XMLProfilerItem):
-    def __init__(self, results_dir = 'regex'):
-        super(RegexProfile, self).__init__(results_dir)
+    def __init__(self, name = 'regex'):
+        super(RegexProfile, self).__init__( name)
 
     def search_tag_by_attribute(self, file_data, tag, attribute, attribute_value, 
-                                parent_dir, test_number = 0):
+                                test_number = 0):
         # search_string = '.*(<.*?id="open_auction2111".*?>)'
         # search_string = '(<.*?id="item21749".*?>)'
         # xml_file = open(self.file_name, 'r')
@@ -69,11 +63,11 @@ class RegexProfile(XMLProfilerItem):
 
 from lxml import etree
 class LXMLProfile(XMLProfilerItem):
-    def __init__(self, results_dir = 'lxml'):
-        super(LXMLProfile, self).__init__(results_dir)
+    def __init__(self, name = 'lxml'):
+        super(LXMLProfile, self).__init__(name)
 
     def search_tag_by_attribute(self, file_data, tag, attribute, attribute_value, 
-                                parent_dir, test_number = 0):
+                                test_number = 0):
 
         xpath_query = './/%s[@%s="%s"]' % (tag, attribute, attribute_value)
         def to_profile(local_dict):
@@ -88,11 +82,11 @@ class LXMLProfile(XMLProfilerItem):
 
 from xml.parsers import expat
 class EXPatProfile(XMLProfilerItem):
-    def __init__(self, results_dir = 'expat'):
-        super(EXPatProfile, self).__init__(results_dir)
+    def __init__(self, name = 'expat'):
+        super(EXPatProfile, self).__init__(name)
 
     def search_tag_by_attribute(self, file_data, tag, attribute, attribute_value, 
-                                parent_dir, test_number = 0):
+                                test_number = 0):
 
         def to_profile(local_dict):
             found = {'tag':'', 'attribute_value':''}
@@ -110,4 +104,28 @@ class EXPatProfile(XMLProfilerItem):
 
         return self.run_profile(to_profile, locals())
 
+
+from xml.dom.minidom import parse, parseString
+class MiniDomProfile(XMLProfilerItem):
+    def __init__(self, name = 'minidom'):
+        super(MiniDomProfile, self).__init__(name)
+
+    def search_tag_by_attribute(self, file_data, tag, attribute, attribute_value, 
+                                test_number = 0):
+
+        def to_profile(local_dict):
+            found = {'tag':'', 'attribute_value':''}
+            dom = parseString(local_dict['file_data'])
+            elements = dom.getElementsByTagName(local_dict['tag'])
+            for element in elements:
+                element_value = element.getAttribute(local_dict['attribute'])
+                # print element_value
+                if element_value == local_dict['attribute_value']:
+                    found = {'tag':element.tagName, 'attribute_value':element_value}
+                    break
+
+            
+            return found
+
+        return self.run_profile(to_profile, locals())
 
