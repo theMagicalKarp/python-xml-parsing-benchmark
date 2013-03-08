@@ -59,7 +59,7 @@ For this I ran the profiler against various xml files and valued there run times
  * 0.0036 seconds per sample
 
 ## Conclusion 
-It is important to see that the regular expression preformed the best however, however the use of regular expression in many xml applicaitons is considered to be bad practice.  This webpage along with many more articles help explain why.
+Overall our regular expressions preformed the best.  However, the use of regular expressions in any xml applicaiton is considered to be bad practice.  This webpage helps explain why.
 
 http://www.codinghorror.com/blog/2008/06/regular-expressions-now-you-have-two-problems.html
 
