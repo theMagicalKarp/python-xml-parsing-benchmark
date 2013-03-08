@@ -1,8 +1,8 @@
 # Benchmarking Python XML Parsing Libraries
 
-This was a small project to understand how diferent python xml parsing libraries compared to each other.  
+This is a small project to understand how diferent xml parsing python libraries compare to each other.  From this it is my hope to obtain a stronger grasp on superior methods and libraries to use when proccessing large amounts of xml data.
 
-List of XML parsing libararies profiled.
+List of XML parsing libararies that are profiled and compared in this project.
 * lxml
   * http://lxml.de/
 * expat
@@ -26,8 +26,7 @@ Due to this built in library it was very simple and easy to collect the time bas
 
 ##Testing for Scalability 
 
-This was a bit more tricky but still not that bad. 
-For this I ran this profiler against various xml files and valued there run times for each sample.  I've included a few of these xml files in the git one of which is over 100mb. 
+For this I ran the profiler against various xml files and valued there run times for each sample.  I've included a few of these xml files in the git one of which is over 100mb. 
 
 
 
@@ -58,7 +57,10 @@ For this I ran this profiler against various xml files and valued there run time
   * less than 0.0000 seconds per sample
 
 ## Conclusion 
+It is important to see that the regular expression preformed the best however, the use of regular expression in many xml applicaitons is considered to be bad practice.
 
-We can note that when parsing small xml files the diferences between each library is negligible. However when we start to scale with a larger xml file the lxml iter parser keeps a low cost. 
-Overall most of the lxml libraries competed very well and would be recomended for xml parsing in python.
+http://www.codinghorror.com/blog/2008/06/regular-expressions-now-you-have-two-problems.html
+
+Next we can note that when parsing small xml files the diferences between each library is negligible. However when we start to scale with a larger xml file the lxml iter parser keeps a low cost. 
+Overall most of the lxml libraries preformed well and would be recomended for xml parsing in python.
 
