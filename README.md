@@ -2,7 +2,7 @@
 
 This is a small project to understand how diferent xml parsing python libraries compare to each other.  From this it is my hope to obtain a stronger grasp on superior methods and libraries to use when proccessing large amounts of xml data.
 
-List of XML parsing libararies that are profiled and compared in this project.
+XML parsing libararies used for this project.
 * lxml
   * http://lxml.de/
 * expat
