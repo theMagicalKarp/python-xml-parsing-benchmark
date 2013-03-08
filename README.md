@@ -63,8 +63,8 @@ It is important to see that the regular expression preformed the best however, h
 
 http://www.codinghorror.com/blog/2008/06/regular-expressions-now-you-have-two-problems.html
 
-Next we can note that when parsing small xml files the diferences between each library is negligible. However when we start to scale with a larger xml file the lxml iter parser keeps a low cost. 
-Expat was also a close contender to lxml but had some flaws such that you were not able to abort a search after finding a desired result.
-We also found issues with other counterparts such as minidom which becomes bloated and unable to even finish the first test on the larger xml file.
-Overall most of the lxml libraries preformed well and would be recomended for xml parsing in python.
+Next we can note that when parsing the small xml file the diferences between each library is negligible. However when we start to scale with a larger xml file the lxml iter parser has the fastest average.
+Expat was also a close contender to the lxml libraries but had some flaws some of which included the inability to abort parsing when the expected results were found.
+We also found issues with minidom which was unable to run the 100 megabyte file because when the library loaded the file into memory it became bloated and unable to finish even the first test.  It took up 6 gigs of memory before I had to kill it.
+Overall most of the lxml libraries preformed well and I was extremely satisfied with the iter parsing's simplicity, scaling, and speed.
 
