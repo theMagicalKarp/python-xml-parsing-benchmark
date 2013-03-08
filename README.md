@@ -14,11 +14,11 @@ List of XML parsing libararies that are profiled and compared in this project.
 
 
 In each parsing library I took into consideration speed and scalability.
-For our purposes I only wrote out one profiler for each library that finds a tag based off it's name and specific attribute value.  Future iterations should include more profiling scenarios. 
+For our purposes I only wrote one profiler for each library that finds an element based off it's name and specific attribute value.  Future iterations should include more profiling scenarios. 
 
 ## Testing for Speed
 
-For this I utilized one of pythons built in profilers cProfiler while collecting all of the results in pStat.
+For this I utilized one of pythons built in profilers, cProfiler, while collecting all of the results in pStat.
 
 http://docs.python.org/2/library/profile.html
 
@@ -32,7 +32,7 @@ For this I ran the profiler against various xml files and valued there run times
 
 ## What I Found
 
-### Parsing the large xml (mega.xml) file with 100 samples.
+### Parsing the large xml (mega.xml) collecting 100 samples.
 
 * lxml
   * 2.32 seconds per sample (etree)
@@ -43,9 +43,9 @@ For this I ran the profiler against various xml files and valued there run times
 * re (regular expressions)
   * 0.54 seconds per sample
 * minidom
-  * Read over 6 gigs of memory while trying to load the file and unable to finish the first profile run.
+  * Read over 6 gigs of memory while trying to load the file and was unable to finish the first profile run.
 
-### Parsing the small xml (books.xml) file with 100000 samples.
+### Parsing the small xml (books.xml) collecting 100000 samples.
 
 * lxml
   * 0.0002 seconds per sample (etree)
@@ -63,8 +63,8 @@ It is important to see that the regular expression preformed the best however, h
 
 http://www.codinghorror.com/blog/2008/06/regular-expressions-now-you-have-two-problems.html
 
-Next we can note that when parsing the small xml file the diferences between each library is negligible. However when we start to scale with a larger xml file the lxml iter parser has the fastest average.
-Expat was also a close contender to the lxml libraries but had some flaws some of which included the inability to abort parsing when the expected results were found.
-We also found issues with minidom which was unable to run the 100 megabyte file because when the library loaded the file into memory it became bloated and unable to finish even the first test.  It took up 6 gigs of memory before I had to kill it.
-Overall most of the lxml libraries preformed well and I was extremely satisfied with the iter parsing's simplicity, scaling, and speed.
+Next we can note that when parsing the small xml file the diferences between each library was negligible. However when we started to scale with a larger xml file the lxml iter parser had the fastest average.
+Expat was also a close contender to the lxml libraries but had some flaws.  Some of these flaws included the inability to abort parsing when the expected results were found.
+We also had issues with minidom because it was unable to run the 100 megabyte file.  When ever the library loaded the file into memory it became bloated and unable to finish the first test.  It took up 6 gigs of memory before I had to kill it.
+Overall most of the lxml libraries preformed well and I was satisfied with the iter parsing's simplicity, scaling, and speed.
 
