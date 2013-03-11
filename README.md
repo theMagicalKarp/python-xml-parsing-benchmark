@@ -61,7 +61,7 @@ For this I ran the profiler against various xml files and valued there run times
 ## Conclusion 
 Overall our regular expressions preformed the best.  However, the use of regular expressions in any xml applicaiton is considered to be bad practice.  This webpage helps explain why.
 
-http://www.codinghorror.com/blog/2008/06/regular-expressions-now-you-have-two-problems.html
+http://www.codinghorror.com/blog/2009/11/parsing-html-the-cthulhu-way.html
 
 Next we can note that when parsing the small xml file the diferences between each library was negligible. However when we started to scale with a larger xml file the lxml iter parser had the fastest average.
 Expat was also a close contender to the lxml libraries but had some flaws.  Some of these flaws included the inability to abort parsing when the expected results were found.
