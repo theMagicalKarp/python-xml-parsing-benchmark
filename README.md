@@ -14,7 +14,7 @@ XML parsing libararies used for this project.
 
 
 In each parsing library I took into consideration speed and scalability.
-For our purposes I only wrote one profiler for each library that finds an element based off it's name and specific attribute value.  Future iterations should include more profiling scenarios. 
+For our purposes I only wrote one profiler for each library that finds an element based off its name and specific attribute value.  Future iterations should include more profiling scenarios. 
 
 ## Testing for Speed
 
@@ -50,7 +50,7 @@ For this I ran the profiler against various xml files and valued there run times
 * lxml
   * 0.0002 seconds per sample (etree)
   * 0.0002 seconds per sample (xml parser)
-  * 0.0001 seconds per sample iter parser
+  * 0.0001 seconds per sample (iter parser)
 * expat
   * 0.00021 seconds per sample
 * re (regular expressions)
