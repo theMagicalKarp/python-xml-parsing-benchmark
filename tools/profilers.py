@@ -197,6 +197,35 @@ class EXPatProfile(XMLProfilerItem):
         return self.run_profile(to_profile, locals())
 
 
+from xml.parsers import expat
+class EXPatHackProfile(XMLProfilerItem):
+    def __init__(self, name = 'expat_hack'):
+        super(EXPatHackProfile, self).__init__(name)
+
+    def search_tag_by_attribute(self, file_data, tag, attribute, attribute_value, 
+                                test_number = 0):
+
+        def to_profile(local_dict):
+            found = {'tag':'', 'attribute_value':''}
+            def start_element(name, attrs):
+                if name == local_dict['tag']:
+                    found_attribute = attrs.get(local_dict['attribute'],None)
+                    if found_attribute and found_attribute == local_dict['attribute_value']:
+                        found['tag'] = name
+                        found['attribute_value'] = found_attribute
+                        raise Exception
+
+            p = expat.ParserCreate()
+            p.StartElementHandler = start_element
+            try:
+                p.Parse(local_dict['file_data'])
+            except:
+                pass
+            return found
+
+        return self.run_profile(to_profile, locals())
+
+
 from xml.dom.minidom import parse, parseString
 class MiniDomProfile(XMLProfilerItem):
     def __init__(self, name = 'minidom'):

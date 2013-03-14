@@ -37,10 +37,11 @@ def main(argv):
     maple = tools.profilers.LXMLParserProfile()
     izzy = tools.profilers.LXMLIterProfile()
     patty = tools.profilers.EXPatProfile()
+    paxxy = tools.profilers.EXPatHackProfile()
 
     mini = tools.profilers.MiniDomProfile() # memory hog for large files
 
-    profile_manager = tools.ProfileManager([regy, lexy, maple, izzy, patty], file_name)
+    profile_manager = tools.ProfileManager([regy, lexy, maple, izzy, patty, paxxy], file_name)
 
     profile_manager.search_tag_by_attribute(tag, attribute, attribute_value, sample_size)
     # profile_manager.search_tag_by_attribute('item', 'id', 'item21749',100)
